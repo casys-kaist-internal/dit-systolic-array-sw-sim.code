@@ -33,46 +33,43 @@ if __name__ == "__main__":
 
     result_dict = {}
 
-    for r in range(1, c + 1):
-        skip = False
-        total = [0, 0, 0, 0, 0]
+    # for r in range(1, c + 1):
+    r = c
+    skip = False
+    total = [0, 0, 0, 0, 0]
 
-        f.seek(0)
+    f.seek(0)
 
-        for l in f:
-            m, k, n = l.strip().split()
+    for l in f:
+        m, k, n = l.strip().split()
 
-            args = (int(m), int(k), int(n), int(bitwidth), int(r), int(c))
+        args = (int(m), int(k), int(n), int(bitwidth), int(r), int(c))
 
-            try:
-                filename = "results/gemm/" + "-".join(str(x) for x in args) + ".out"
-                cached = open(filename)
-                results = cached.readline().strip().split("\t")
-                results = [int(x) for x in results]
-                result_dict[args] = results
-            except:
-                print ("no result for", args)
-                skip = True
+        try:
+            filename = "results/gemm/" + "-".join(str(x) for x in args) + ".out"
+            cached = open(filename)
+            results = cached.readline().strip().split("\t")
+            results = [int(x) for x in results]
+            result_dict[args] = results
+        except:
+            print ("no result for", args)
+            skip = True
 
-        if skip:
-            outfile.write("\n")
-            continue
+    f1 = open(f"dims/{jobtype}.txt")
 
-        f1 = open(f"dims/{jobtype}.txt")
+    for l in f1:
+        m, k, n = l.strip().split()
 
-        for l in f1:
-            m, k, n = l.strip().split()
+        args = (int(m), int(k), int(n), int(bitwidth), int(r), int(c))
+        results = result_dict[args]
+        total = [x + y for x, y in zip(total, results)]
 
-            args = (int(m), int(k), int(n), int(bitwidth), int(r), int(c))
-            results = result_dict[args]
-            total = [x + y for x, y in zip(total, results)]
-
-        # r -> util
-        total.pop(3)
-        total.append(str(int(total[3]) / (r * int(total[2]) * c) ))
-        
-        outfile.write("\t".join(str(x) for x in total))
-        outfile.write("\n")
+    # r -> util
+    total.pop(3)
+    total.append(str(int(total[3]) / (r * int(total[2]) * c) ))
+    
+    outfile.write("\t".join(str(x) for x in total))
+    outfile.write("\n")
 
     f.close()
     try:
