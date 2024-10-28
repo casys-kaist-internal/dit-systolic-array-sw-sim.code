@@ -12,7 +12,7 @@ f1 = open(f"dims/{model}_{jobtype}_{batchsize}.txt")
 
 outfile.write("mantissa_row-num_batch-size_type, Total_cycles, Read_stall, MAC_cycles, Mac_ops_count, Util\n")
 
-for bitwidth in [2, 4, 7]:
+for bitwidth in [22, 44, 74, 77]:
     for rows in range(1, r+1):
         batch = batchsize[1:]
         t = "T" if jobtype == "train" else "I"

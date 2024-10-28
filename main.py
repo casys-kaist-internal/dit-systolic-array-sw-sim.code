@@ -35,16 +35,17 @@ def simulate(m, k, n, bitwidth, rows, cols):
     lhs = np.random.normal(0, 1, size=(m, k))
     rhs = np.random.normal(0, 1, size=(k, n))
 
+    l_bitwidth, r_bitwidth = bitwidth
     # 2. Create the caches, and convert.
-    lhs_cache = ReadCache(size=SIZE, m_bitwidth=bitwidth, bandwidth=BW, freq=FREQ, cycle_only=CYCLE_ONLY)
-    lhs_conv = MXBFPConverter(m_bitwidth=bitwidth, e_bitwidth=8, cache=lhs_cache, cycle_only=CYCLE_ONLY)
+    lhs_cache = ReadCache(size=SIZE, m_bitwidth=l_bitwidth, bandwidth=BW, freq=FREQ, cycle_only=CYCLE_ONLY)
+    lhs_conv = MXBFPConverter(m_bitwidth=l_bitwidth, e_bitwidth=8, cache=lhs_cache, cycle_only=CYCLE_ONLY)
     lhs_conv.convert(lhs)
     assert lhs_cache.no_Nones()
 
     # Make sure that the right-hand side matrix has vertical=True!
-    rhs_cache = ReadCache(size=SIZE, m_bitwidth=bitwidth, bandwidth=BW, freq=FREQ, cycle_only=CYCLE_ONLY)
+    rhs_cache = ReadCache(size=SIZE, m_bitwidth=r_bitwidth, bandwidth=BW, freq=FREQ, cycle_only=CYCLE_ONLY)
     rhs_conv = MXBFPConverter(
-        m_bitwidth=bitwidth, e_bitwidth=8, cache=rhs_cache, vertical=True, cycle_only=CYCLE_ONLY)
+        m_bitwidth=r_bitwidth, e_bitwidth=8, cache=rhs_cache, vertical=True, cycle_only=CYCLE_ONLY)
     rhs_conv.convert(rhs)
     assert rhs_cache.no_Nones()
 
@@ -52,11 +53,13 @@ def simulate(m, k, n, bitwidth, rows, cols):
     # Divide k by 16, create cache objects, and feed the dimensions to the systolic array.
 
     # Before we create the systolic array, determine cycles per mac.
-    if bitwidth == 7:
+    if bitwidth == (7, 7):
         cycles_per_mac = 16
-    elif bitwidth == 4:
+    elif bitwidth == (7, 4):
+        cycles_per_mac = 8
+    elif bitwidth == (4, 4):
         cycles_per_mac = 4
-    elif bitwidth == 2:
+    elif bitwidth == (2, 2):
         cycles_per_mac = 1
     else:
         raise AssertionError("please manually set cycles per mac.")
@@ -104,6 +107,7 @@ def simulate(m, k, n, bitwidth, rows, cols):
     elapsed = time() - start
 
     if WRITE:
+        bitwidth = str(l_bitwidth) + str(r_bitwidth)
         args = (m, k, n, bitwidth, rows, cols)
         fname = "results/gemm/" + "-".join(str(x) for x in args) + ".out"
         f = open(fname, 'w')
@@ -128,7 +132,7 @@ if __name__ == "__main__":
         m = int(argv[1])
         k = int(argv[2])
         n = int(argv[3])
-        bitwidth = int(argv[4])
+        bitwidth = str(argv[4])
         rows = int(argv[5])
         cols = int(argv[6])
     except:
@@ -147,5 +151,8 @@ if __name__ == "__main__":
 
         if isfile(fname):
             exit()
-
+    
+    l_bitwidth = int(bitwidth[0])
+    r_bitwidth = int(bitwidth[1])
+    bitwidth = (l_bitwidth, r_bitwidth)
     print(simulate(m, k, n, bitwidth, rows, cols))
