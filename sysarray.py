@@ -478,6 +478,7 @@ class SystolicArray:
 
                     while True:
                         old_util = self.total_util_sum
+                        print(old_util, self.total_util_sum, end='\r')
                         self.progress_bdW()
 
                         if self.total_util_sum == old_util:
