@@ -2,17 +2,18 @@ from sys import argv
 
 filename = argv[1]
 
-model, jobtype, batchsize = filename.split("_")
+model, batchsize = filename.split("_")
+jobtype = "infer"
 
 r = int(argv[2])
 c = r
 
 outfile = open(f"results/{model}-{jobtype}-{batchsize}-{r}.csv", "w")
-f1 = open(f"dims/{model}_{jobtype}_{batchsize}.txt")
 
 outfile.write("mantissa_row-num_batch-size_type, Total_cycles, Read_stall, MAC_cycles, Mac_ops_count, Util\n")
 
 for bitwidth in [44, 74, 77]:
+    f1 = open(f"dims/{model}_{batchsize}_{bitwidth}.txt")
     # for rows in range(1, r+1):
     rows = r
     batch = batchsize[1:]
@@ -21,7 +22,7 @@ for bitwidth in [44, 74, 77]:
     # We have the header ready. Now read individual GEMM results and add.
 
     try:
-        f = open(f"dims/{model}_{jobtype}_{batchsize}_unique.txt")
+        f = open(f"dims/{model}_{batchsize}_{bitwidth}_unique.txt")
     except:
         raise AssertionError("dimension reading failed. Please read the instructions. ")
 

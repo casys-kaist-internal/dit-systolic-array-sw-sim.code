@@ -20,9 +20,14 @@ from os.path import isfile
 # Others, such as size of cache, bandwidth, frequency, are defined below.
 # Exponent bitwidth is hard-coded as 8.
 
+"""
 FREQ = 500  # in MHz
 BW = 204.8  # in GB/s
 SIZE = 160 * 1024  # in bytes, for both.
+"""
+FREQ = 1560  # in MHz
+BW = 935.8  # in GB/s
+SIZE = 256 * 1024  # in bytes, for both.
 OUT_CONV_CYC = 16  # cycles needed to convert a group of values. Assume pipelining available.
 
 WRITE = True        # Write results to results/gemm/.
