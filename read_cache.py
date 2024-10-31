@@ -38,7 +38,8 @@ class ReadCache:
         )
 
         size_per_group_bytes = (
-            e_bitwidth + (group_size // 2) + (group_size * (m_bitwidth + 1))
+            e_bitwidth + (group_size // 2) + (group_size * (m_bitwidth + 1)) 
+            # shared exp + micro exp + group size * (mantissa + sign)
         ) / 8
         self.reads_per_one_fill = floor(self.size / size_per_group_bytes)
 

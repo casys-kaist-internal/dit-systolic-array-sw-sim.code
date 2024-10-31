@@ -25,9 +25,9 @@ FREQ = 500  # in MHz
 BW = 204.8  # in GB/s
 SIZE = 160 * 1024  # in bytes, for both.
 """
-FREQ = 1560  # in MHz
-BW = 935.8  # in GB/s
-SIZE = 256 * 1024  # in bytes, for both.
+FREQ = 500  # in MHz
+BW = 935.8  # in GB/s, not used now
+SIZE = 40 * 1024 * 1024  # in bytes, for both.
 OUT_CONV_CYC = 16  # cycles needed to convert a group of values. Assume pipelining available.
 
 WRITE = True        # Write results to results/gemm/.
@@ -43,8 +43,9 @@ def simulate(m, k, n, bitwidth, rows, cols):
     l_bitwidth, r_bitwidth = bitwidth
     # 2. Create the caches, and convert.
     lhs_cache = ReadCache(size=SIZE, m_bitwidth=l_bitwidth, bandwidth=BW, freq=FREQ, cycle_only=CYCLE_ONLY)
+    # set self.cycles_for_half_full, self.reads_per_one_fill
     lhs_conv = MXBFPConverter(m_bitwidth=l_bitwidth, e_bitwidth=8, cache=lhs_cache, cycle_only=CYCLE_ONLY)
-    lhs_conv.convert(lhs)
+    lhs_conv.convert(lhs) # lhs_conv.get_stats 의 operation 들은 어디간겨? 
     assert lhs_cache.no_Nones()
 
     # Make sure that the right-hand side matrix has vertical=True!

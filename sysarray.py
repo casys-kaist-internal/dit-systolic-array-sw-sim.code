@@ -436,7 +436,7 @@ class SystolicArray:
             # Tiling
             for i in range(lhs.shape[0] // self.sysarr_col):
                 for j in range(rhs.shape[1] // self.sysarr_row):
-                    # print(i, j)
+                    # print(i, j, self.cycles, self.calc_cycles)
                     # 0. Reset all incremented values to 0.
                     self.reset()
 
@@ -460,6 +460,7 @@ class SystolicArray:
                             actual_rhs = np.delete(tile_r, np.where(np.all(tile_r < 0, axis=0))[0], axis=1)
 
                         try:
+                            # 한 tile 에 대해서 cycles 계산하고 나서는 cached value 가져온다. 
                             calc_cycles_per_tile, util_per_tile = self.cached_cycles[(actual_lhs.shape, actual_rhs.shape)]
 
                             # Assume that we don't get any more read stalls
@@ -478,10 +479,9 @@ class SystolicArray:
 
                     while True:
                         old_util = self.total_util_sum
-                        print(old_util, self.total_util_sum, end='\r')
                         self.progress_bdW()
-
-                        if self.total_util_sum == old_util:
+                        print(self.total_util_sum - old_util)
+                        if self.total_util_sum == old_util: # tile 하나에 대해서 더 이상 읽을 것도 없고 계산할 것도 없는 상태
                             break
 
                     # Note that this overshoots the calculation by 1 cycle.
