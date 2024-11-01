@@ -376,15 +376,17 @@ class SystolicArray:
         self.cycles += 1
         self.calc_cycles += 1
 
-        # util_matrix = np.zeros((self.sysarr_row, self.sysarr_col))
+        util_matrix = np.zeros((self.sysarr_row, self.sysarr_col))
 
         for y in range(self.sysarr_row):
             for x in range(self.sysarr_col):
                 if self.fmac_array[y][x].do_calc():
                     self.total_util_sum += 1
-                    # util_matrix[y, x] = 1
+                    util_matrix[y, x] = 1
 
-        # print(util_matrix)
+        # for k in util_matrix:
+        #     l = [int(i) for i in k.tolist()]
+        #     print(l)
         # print()
 
         self.first = False
@@ -480,7 +482,7 @@ class SystolicArray:
                     while True:
                         old_util = self.total_util_sum
                         self.progress_bdW()
-                        print(self.total_util_sum - old_util)
+                        # print(self.total_util_sum - old_util)
                         if self.total_util_sum == old_util: # tile 하나에 대해서 더 이상 읽을 것도 없고 계산할 것도 없는 상태
                             break
 

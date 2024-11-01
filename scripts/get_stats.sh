@@ -8,7 +8,7 @@
 
 # for (( i=8; i>=1; i-- )); do
 while IFS=$'\t' read -r m k n; do
-    echo $m $k $n $2 $3 $3
-    python main.py $m $k $n $2 $3 $3
+    echo $m $k $n $2 $3 $4
+    python main.py $m $k $n $2 $3 $4
 done < dims/$1_unique.txt
 # done
