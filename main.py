@@ -25,7 +25,7 @@ FREQ = 500  # in MHz
 BW = 204.8  # in GB/s
 SIZE = 160 * 1024  # in bytes, for both.
 """
-FREQ = 500  # in MHz
+FREQ = 1000  # in MHz
 BW = 935.8  # in GB/s, not used now
 SIZE = 40 * 1024 * 1024  # in bytes, for both.
 OUT_CONV_CYC = 16  # cycles needed to convert a group of values. Assume pipelining available.

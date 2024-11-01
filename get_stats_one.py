@@ -20,7 +20,8 @@ if __name__ == "__main__":
     try:
         jobtype = argv[1]
         bitwidth = int(argv[2])
-        c = int(argv[3])
+        r = int(argv[3])
+        c = int(argv[4])
     except:
         raise AssertionError("not enough argv values. Please read the instructions. ")
 
@@ -34,7 +35,6 @@ if __name__ == "__main__":
     result_dict = {}
 
     # for r in range(1, c + 1):
-    r = c
     skip = False
     total = [0, 0, 0, 0, 0]
 

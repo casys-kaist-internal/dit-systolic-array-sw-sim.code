@@ -6,9 +6,9 @@ model, batchsize = filename.split("_")
 jobtype = "infer"
 
 r = int(argv[2])
-c = r
+c = int(argv[3])
 
-outfile = open(f"results/{model}-{jobtype}-{batchsize}-{r}.csv", "w")
+outfile = open(f"results/{model}-{jobtype}-{batchsize}-{r}-{c}.csv", "w")
 
 outfile.write("mantissa_row-num_batch-size_type, Total_cycles, Read_stall, MAC_cycles, Mac_ops_count, Util\n")
 
