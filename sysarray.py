@@ -39,6 +39,7 @@ class SystolicArray:
         self.calc_cycles = 0
         self.total_util_sum = 0
         self.last_stalled_cycle = 0
+        self.miss_cnt = 0
 
         # Set this to True if you don't care about the actual values.
         self.cycle_only = cycle_only
@@ -349,6 +350,7 @@ class SystolicArray:
 
             # Determine how many cycles since last cache miss, and how many cycles we are at right now.
             if max(miss_lhs, miss_rhs) > 0:
+                self.miss_cnt += 1
                 # print("stall", miss_lhs, miss_rhs)
                 if (
                     self.last_stalled_cycle + self.lhs_cache.cycles_for_half_full

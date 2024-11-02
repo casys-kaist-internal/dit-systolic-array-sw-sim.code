@@ -27,7 +27,7 @@ SIZE = 160 * 1024  # in bytes, for both.
 """
 FREQ = 1000  # in MHz
 BW = 935.8  # in GB/s, not used now
-SIZE = 40 * 1024 * 1024  # in bytes, for both.
+SIZE = 256 * 1024  # in bytes, for both.
 OUT_CONV_CYC = 16  # cycles needed to convert a group of values. Assume pipelining available.
 
 WRITE = True        # Write results to results/gemm/.
@@ -54,6 +54,9 @@ def simulate(m, k, n, bitwidth, rows, cols):
         m_bitwidth=r_bitwidth, e_bitwidth=8, cache=rhs_cache, vertical=True, cycle_only=CYCLE_ONLY)
     rhs_conv.convert(rhs)
     assert rhs_cache.no_Nones()
+
+    # print(f"lhs_conversion {lhs_conv.get_stats()}")
+    # print(f"rhs_conversion {rhs_conv.get_stats()}")
 
     # Note that if you want to just work with dimensions,
     # Divide k by 16, create cache objects, and feed the dimensions to the systolic array.
@@ -82,7 +85,7 @@ def simulate(m, k, n, bitwidth, rows, cols):
 
     # 4. Multiply.
     result = sArray.multiply((m, k), (k, n))
-
+    print(f"miss cnt : {sArray.miss_cnt}")
     # 4-1. If you want to verify the results, find the differences.
     
     # If dimensions are different, that means that result has padding.
